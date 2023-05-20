@@ -48,7 +48,7 @@ public enum User {
 
     public static User getRandomUserToReceiveMoney(User sender) {
         return ALL_USERS_CAN_RECEIVE_MONEY.stream()
-                .filter(user -> user.equals(sender))
+                .filter(user -> !user.equals(sender))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("There is no user available!"));
     }

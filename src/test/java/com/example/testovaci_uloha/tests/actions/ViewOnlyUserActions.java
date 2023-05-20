@@ -16,6 +16,6 @@ public class ViewOnlyUserActions {
     }
 
     public void shouldNotBeTransferMoneyAvailable() {
-        assertFalse(generalUserActions.isTransferMoneyAvailable());
+        assertFalse("Money transfer option shouldn't be visible", generalUserActions.isTransferMoneyAvailable());
     }
 }
