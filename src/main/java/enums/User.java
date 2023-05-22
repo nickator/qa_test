@@ -1,10 +1,8 @@
 package enums;
 import lombok.Getter;
+import utils.Utils;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public enum User {
@@ -49,8 +47,11 @@ public enum User {
     public static User getRandomUserToReceiveMoney(User sender) {
         return ALL_USERS_CAN_RECEIVE_MONEY.stream()
                 .filter(user -> !user.equals(sender))
+                .collect(Utils.toShuffledList())
+                .stream()
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("There is no user available!"));
+
     }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class MySqlUtil {
@@ -24,11 +25,7 @@ public class MySqlUtil {
         return dataSource;
     }
 
-    public Transactions getAllMoneyTransfers() {
-        jdbcTemplate = new JdbcTemplate(getDataSource());
-        String sql = "SELECT * FROM transaction ORDER BY id DESC LIMIT 1";
-        return jdbcTemplate.queryForObject(sql, new TransactionsRowMapper());
-    }
+
 
     private static class TransactionsRowMapper implements RowMapper<Transactions> {
         @Override
@@ -47,7 +44,28 @@ public class MySqlUtil {
 
     private static double parseAmount(String amountString) {
         int intValue = Integer.parseInt(amountString);
-        double doubleValue = (double) intValue / 100;
-        return doubleValue;
+        return (double) intValue / 100;
     }
+
+
+    public Transactions getAllMoneyTransfers() {
+        jdbcTemplate = new JdbcTemplate(getDataSource());
+        String sql = "SELECT * FROM transaction ORDER BY id DESC LIMIT 1";
+        return jdbcTemplate.queryForObject(sql, new TransactionsRowMapper());
+    }
+
+    public int gerRandomUserId() {
+        jdbcTemplate = new JdbcTemplate(getDataSource());
+        String sql = "SELECT id FROM user";
+        List<Integer> listOfIds = jdbcTemplate.queryForList(sql, Integer.class);
+        return listOfIds.stream().collect(Utils.toShuffledList()).get(0);
+    }
+
+    public int getRandomNotUsedUserId() {
+        jdbcTemplate = new JdbcTemplate(getDataSource());
+        String sql = "SELECT id FROM user ORDER BY id DESC LIMIT 1";
+        int lastId = jdbcTemplate.queryForObject(sql, Integer.class);
+        return lastId + 1;
+    }
+
 }
